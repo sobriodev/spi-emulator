@@ -6,4 +6,4 @@ set(CMAKE_C_STANDARD 99)
 # Include directories
 include_directories(${spi_emulator_SOURCE_DIR}/include)
 
-add_library(emulator dummy.c)
+add_library(emulator dummy.c ../include/type.h)

@@ -1,5 +1,6 @@
 #include "CppUTest/CommandLineTestRunner.h"
 #include "dummy.h"
+#include "type.h"
 
 TEST_GROUP(DummyGroup)
 {
@@ -11,7 +12,7 @@ TEST_GROUP(DummyGroup)
 
 TEST(DummyGroup, DummyTest)
 {
-    int* somePtr = static_cast<int*>(malloc(sizeof(int)));
+    i32* somePtr = static_cast<int*>(malloc(sizeof(i32)));
     *somePtr = 100;
     free(somePtr);
 }
