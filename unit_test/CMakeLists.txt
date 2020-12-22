@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.5)
 project(unit_test CXX)
 
+set(CMAKE_CXX_STANDARD 14)
+
 SET(CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 SET(CPPUTEST_DIR ${CURRENT_DIR}/lib/cpputest)
 SET(MAIN_DIR ${spi_emulator_SOURCE_DIR})
