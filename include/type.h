@@ -5,6 +5,7 @@
 #include <cstdint>
 #else
 #include <stdint.h>
+#include <stddef.h>
 #endif
 
 #ifdef __cplusplus
@@ -31,6 +32,9 @@ typedef int16_t i16;
 typedef int32_t i32;
 typedef int64_t i64;
 /** @} */
+
+/** Memory allocator function type */
+typedef void* (*mem_allocator)(size len);
 
 #ifdef __cplusplus
 }
