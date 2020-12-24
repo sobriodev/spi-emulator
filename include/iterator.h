@@ -1,10 +1,18 @@
-#include "AllTests.h"
+#ifndef SPI_EMULATOR_ITERATOR_H
+#define SPI_EMULATOR_ITERATOR_H
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- Api functions ----------------------------- */
 /* ------------------------------------------------------------------------- */
 
-int main(int argc, char** argv)
-{
-    return CommandLineTestRunner::RunAllTests(argc, argv);
+void identify(void);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif //SPI_EMULATOR_ITERATOR_H

@@ -2,13 +2,14 @@ cmake_minimum_required(VERSION 3.5)
 project(unit_test CXX)
 
 set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic -Werror")
 
-SET(CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
-SET(CPPUTEST_DIR ${CURRENT_DIR}/lib/cpputest)
-SET(MAIN_DIR ${spi_emulator_SOURCE_DIR})
+set(CURRENT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
+set(CPPUTEST_DIR ${CURRENT_DIR}/lib/cpputest)
+set(MAIN_DIR ${spi_emulator_SOURCE_DIR})
 
 # Enable memory leaks detection for cpputest
-SET(CMAKE_CXX_FLAGS "-include ${CPPUTEST_DIR}/include/CppUTest/MemoryLeakDetectorMallocMacros.h")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -include ${CPPUTEST_DIR}/include/CppUTest/MemoryLeakDetectorMallocMacros.h")
 
 # Include directories
 include_directories(${MAIN_DIR}/include)
@@ -19,7 +20,7 @@ include_directories(${CPPUTEST_DIR}/include)
 link_directories(${CPPUTEST_DIR})
 link_directories(${MAIN_DIR}/lib/ini)
 
-add_executable(TestDummy AllTests.cpp TestDummy.cpp)
-target_link_libraries(TestDummy emulator CppUTest CppUTestExt)
+add_executable(IteratorTests AllTests.cpp IteratorTests.cpp)
+target_link_libraries(IteratorTests emulator CppUTest CppUTestExt)
 
-add_test(NAME TestDummy COMMAND TestDummy -v)
+add_test(NAME IteratorTests COMMAND IteratorTests -v)

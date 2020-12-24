@@ -1,10 +1,10 @@
-#include "AllTests.h"
+#include "iterator.h"
 
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- Api functions ----------------------------- */
 /* ------------------------------------------------------------------------- */
 
-int main(int argc, char** argv)
+void identify(void)
 {
-    return CommandLineTestRunner::RunAllTests(argc, argv);
+
 }
