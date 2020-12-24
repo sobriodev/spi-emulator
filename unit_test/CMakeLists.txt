@@ -20,7 +20,7 @@ include_directories(${CPPUTEST_DIR}/include)
 link_directories(${CPPUTEST_DIR})
 link_directories(${MAIN_DIR}/lib/ini)
 
-add_executable(IteratorTests AllTests.cpp IteratorTests.cpp)
+add_executable(IteratorTests AllTests.cpp IteratorTests.cpp Fakes.cpp)
 target_link_libraries(IteratorTests emulator CppUTest CppUTestExt)
 
 add_test(NAME IteratorTests COMMAND IteratorTests -v)

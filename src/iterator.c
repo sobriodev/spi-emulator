@@ -1,17 +1,63 @@
 #include "iterator.h"
+#include "common.h"
 
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- Api functions ----------------------------- */
 /* ------------------------------------------------------------------------- */
 
-void iterator_construct_ext(iterator_instance* iterator, size user_data_len, mem_allocator allocator)
+iterator_status iterator_construct_ext(iterator_instance* iterator, size user_data_len, mem_allocator allocator)
 {
-    (void)iterator;
-    (void)user_data_len;
-    (void)allocator;
+    NOT_NULL(iterator, iterator_status_iptr);
+    NOT_NULL(allocator, iterator_status_iptr);
+
+    /* Reserve context memory */
+    iterator->context = allocator(user_data_len);
+    NOT_NULL(iterator->context, iterator_status_merror);
+
+    return iterator_status_ok;
 }
 
-void iterator_destruct(iterator_instance iterator)
+iterator_status iterator_destruct_ext(iterator_instance* iterator, mem_deallocator deallocator)
 {
-    (void)iterator;
+    NOT_NULL(iterator, iterator_status_iptr);
+    NOT_NULL(deallocator, iterator_status_iptr);
+
+    deallocator(iterator->context);
+    iterator->context = NULL;
+
+    return iterator_status_ok;
+}
+
+iterator_status iterator_init_as_const(iterator_instance *iterator,
+                                       const_iterator_begin beginFn,
+                                       const_iterator_next nextFn,
+                                       const_iterator_end endFn)
+{
+    NOT_NULL(iterator, iterator_status_iptr);
+    NOT_NULL(beginFn, iterator_status_iptr);
+    NOT_NULL(nextFn, iterator_status_iptr);
+    NOT_NULL(endFn, iterator_status_iptr);
+
+    iterator->type = iterator_type_const;
+    iterator->begin.begin_const = beginFn;
+    iterator->next.next_const = nextFn;
+    iterator->end.end_const = endFn;
+    return iterator_status_ok;
+}
+
+iterator_status iterator_init_as_non_const(iterator_instance *iterator,
+                                           iterator_begin beginFn,
+                                           iterator_next nextFn,
+                                           iterator_end endFn)
+{
+    NOT_NULL(iterator, iterator_status_iptr);
+    NOT_NULL(beginFn, iterator_status_iptr);
+    NOT_NULL(nextFn, iterator_status_iptr);
+    NOT_NULL(endFn, iterator_status_iptr);
+
+    iterator->type = iterator_type_non_const;
+    iterator->begin.begin_non_const = beginFn;
+    iterator->next.next_non_const = nextFn;
+    iterator->end.end_non_const = endFn;
+    return iterator_status_ok;
 }

@@ -3,6 +3,7 @@
 
 #ifdef __cplusplus
 #include <cstdint>
+#include <cstddef>
 #else
 #include <stdint.h>
 #include <stddef.h>
@@ -35,6 +36,9 @@ typedef int64_t i64;
 
 /** Memory allocator function type */
 typedef void* (*mem_allocator)(size len);
+
+/** Memory deallocator function type */
+typedef void (*mem_deallocator)(void* ptr);
 
 #ifdef __cplusplus
 }
