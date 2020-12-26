@@ -28,10 +28,10 @@ iterator_status iterator_destruct_ext(iterator_instance* iterator, mem_deallocat
     return iterator_status_ok;
 }
 
-iterator_status iterator_init_as_const(iterator_instance *iterator,
-                                       const_iterator_begin beginFn,
-                                       const_iterator_next nextFn,
-                                       const_iterator_end endFn)
+iterator_status iterator_init_as_const(iterator_instance* iterator,
+                                       iterator_const_begin beginFn,
+                                       iterator_const_next nextFn,
+                                       iterator_const_end endFn)
 {
     NOT_NULL(iterator, iterator_status_iptr);
     NOT_NULL(beginFn, iterator_status_iptr);
@@ -45,7 +45,7 @@ iterator_status iterator_init_as_const(iterator_instance *iterator,
     return iterator_status_ok;
 }
 
-iterator_status iterator_init_as_non_const(iterator_instance *iterator,
+iterator_status iterator_init_as_non_const(iterator_instance* iterator,
                                            iterator_begin beginFn,
                                            iterator_next nextFn,
                                            iterator_end endFn)

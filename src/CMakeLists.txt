@@ -7,4 +7,4 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall -Wextra -Wpedantic -Werror")
 # Include directories
 include_directories(${spi_emulator_SOURCE_DIR}/include)
 
-add_library(emulator iterator.c)
+add_library(emulator iterator.c array_iterator.c)

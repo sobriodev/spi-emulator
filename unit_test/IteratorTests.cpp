@@ -26,13 +26,13 @@ TEST(Ut_Iterator, NullCases)
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_destruct_ext(&iter, nullptr));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_destruct_ext(nullptr, free));
 
-    auto ci = [](void* ctx) -> const void * { static_cast<void>(ctx); return nullptr; };
+    auto ci = [](void* ctx) -> const void* { static_cast<void>(ctx); return nullptr; };
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(nullptr, ci, ci, ci));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(&iter, nullptr, ci, ci));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(&iter, ci, nullptr, ci));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(&iter, ci, ci, nullptr));
 
-    auto i = [](void* ctx) -> void * { static_cast<void>(ctx); return nullptr; };
+    auto i = [](void* ctx) -> void* { static_cast<void>(ctx); return nullptr; };
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_non_const(nullptr, i, i, i));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_non_const(&iter, nullptr, i, i));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_non_const(&iter, i, nullptr, i));
@@ -111,21 +111,21 @@ TEST(Ut_Iterator, Misc)
     ENUMS_EQUAL_INT(iterator_status_ok, status);
 
     auto begin = [](void* ctx) -> void* {
-        u32* arr = static_cast<u32*>(ctx);
+        auto arr = static_cast<u32*>(ctx);
         return &arr[0];
     };
     auto next = [](void* ctx) -> void* {
-        u32* arr = static_cast<u32*>(ctx);
+        auto arr = static_cast<u32*>(ctx);
         return &arr[1];
     };
     auto end = [](void* ctx) -> void* {
-        u32* arr = static_cast<u32*>(ctx);
+        auto arr = static_cast<u32*>(ctx);
         return &arr[2];
     };
     status = iterator_init_as_non_const(&iter, begin, next, end);
     ENUMS_EQUAL_INT(iterator_status_ok, status);
 
-    u32* ctx = static_cast<u32*>(iter.context);
+    auto ctx = static_cast<u32*>(iter.context);
     ctx[0] = 100;
     ctx[1] = 200;
     ctx[2] = 300;
