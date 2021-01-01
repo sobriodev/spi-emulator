@@ -1,5 +1,4 @@
 #include "iterator.h"
-#include "common.h"
 
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- Api functions ----------------------------- */
@@ -22,8 +21,10 @@ iterator_status iterator_destruct_ext(iterator_instance* iterator, mem_deallocat
     NOT_NULL(iterator, iterator_status_iptr);
     NOT_NULL(deallocator, iterator_status_iptr);
 
-    deallocator(iterator->context);
-    iterator->context = NULL;
+    if (LIKELY(NULL != iterator->context)) {
+        deallocator(iterator->context);
+        iterator->context = NULL;
+    }
 
     return iterator_status_ok;
 }

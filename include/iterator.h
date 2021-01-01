@@ -2,6 +2,7 @@
 #define SPI_EMULATOR_ITERATOR_H
 
 #include "type.h"
+#include "common.h"
 
 #ifdef __cplusplus
 #include <cstdlib>
@@ -149,7 +150,8 @@ static inline iterator_status iterator_construct(iterator_instance* iterator, si
  * Destruct iterator instance.
  *
  * The function frees context memory using custom deallocator and invalidate the pointer.
- * After the operation iterator cannot be used anymore.
+ * After the operation iterator cannot be used anymore. Passing destructed iterator is totally valid - in this case
+ * nothing is done.
  *
  * @param iterator Pointer to an iterator instance.
  * @param deallocator Custom memory deallocator
@@ -207,6 +209,23 @@ iterator_status iterator_init_as_non_const(iterator_instance* iterator,
                                            iterator_begin beginFn,
                                            iterator_next nextFn,
                                            iterator_end);
+
+/**
+ * Check if the iterator is constructed.
+ *
+ * The function returns true if pointer to the context memory is not NULL. It may help with cases when user code do not
+ * destroys actual iterator before reusing it. Passing an uninitialized iterator (without calling construct function
+ * first) has an undefined behaviour.
+ *
+ * @param iter Pointer to an iterator instance.
+ *
+ * @return True if a valid pointer was passed as well as the iterator is actually destructed, false otherwise.
+ */
+static inline bool iterator_is_constructed(const iterator_instance* iter)
+{
+    NOT_NULL(iter, false);
+    return (NULL != iter->context);
+}
 
 #ifdef __cplusplus
 }

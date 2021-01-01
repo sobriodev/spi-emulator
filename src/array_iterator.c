@@ -99,3 +99,57 @@ void* array_iterator_end(void* context)
     array_iterator_ctx* ctx = context;
     return array_begin_as_char_ptr(ctx) + ctx->num_of_elements * ctx->element_size;
 }
+
+bool array_iterator_create_const(iterator_instance* iter, const void* arr, size elements, size element_size)
+{
+    /* Create an abstract iterator */
+    iterator_status is;
+    is = iterator_construct(iter, sizeof(array_iterator_ctx));
+    if (iterator_status_ok != is) {
+        return false;
+    }
+
+    /* Use array implementation */
+    is = iterator_init_as_const(iter, array_iterator_const_begin, array_iterator_const_next, array_iterator_const_end);
+    if (iterator_status_ok != is) {
+        iterator_destruct(iter);
+        return false;
+    }
+
+    /* Set implementation details */
+    array_iterator_status ais;
+    ais = array_iterator_init_const_ctx(iter, arr, elements, element_size);
+    if (array_iterator_status_ok != ais) {
+        iterator_destruct(iter);
+        return false;
+    }
+
+    return true;
+}
+
+bool array_iterator_create(iterator_instance* iter, void* arr, size elements, size element_size)
+{
+    /* Create an abstract iterator */
+    iterator_status is;
+    is = iterator_construct(iter, sizeof(array_iterator_ctx));
+    if (iterator_status_ok != is) {
+        return false;
+    }
+
+    /* Use array implementation */
+    is = iterator_init_as_non_const(iter, array_iterator_begin, array_iterator_next, array_iterator_end);
+    if (iterator_status_ok != is) {
+        iterator_destruct(iter);
+        return false;
+    }
+
+    /* Set implementation details */
+    array_iterator_status ais;
+    ais = array_iterator_init_ctx(iter, arr, elements, element_size);
+    if (array_iterator_status_ok != ais) {
+        iterator_destruct(iter);
+        return false;
+    }
+
+    return true;
+}

@@ -13,7 +13,7 @@
 /* ------------------------------------------------------------------------- */
 
 static const u32 TEST_ARRAY_CONST[TEST_ARRAY_CONST_SIZE] = {0xCAFE, 0xBACA, 0xFEFE, 0xDEDE, 0xFFFF};
-static u32 TEST_ARRAY[TEST_ARRAY_SIZE] = {0xAAAA, 0xBBBB, 0xCCCC};
+static u32 testArray[TEST_ARRAY_SIZE] = {0xAAAA, 0xBBBB, 0xCCCC};
 
 /* ------------------------------------------------------------------------- */
 /* ----------------------------- Test groups ------------------------------- */
@@ -58,7 +58,7 @@ TEST_GROUP(Ut_ArrayIterator)
 
     auto setNonConstContext()
     {
-        return array_iterator_init_ctx(&ncIter, &TEST_ARRAY[0], TEST_ARRAY_SIZE, sizeof(u32));
+        return array_iterator_init_ctx(&ncIter, &testArray[0], TEST_ARRAY_SIZE, sizeof(u32));
     }
 };
 
@@ -78,7 +78,7 @@ TEST(Ut_ArrayIterator, NullCases)
     ENUMS_EQUAL_INT(array_iterator_status_iptr, status);
 
     /* array_iterator_init_ctx NULL cases */
-    status = array_iterator_init_ctx(nullptr, &TEST_ARRAY[0], TEST_ARRAY_SIZE, sizeof(u32));
+    status = array_iterator_init_ctx(nullptr, &testArray[0], TEST_ARRAY_SIZE, sizeof(u32));
     ENUMS_EQUAL_INT(array_iterator_status_iptr, status);
 
     status = array_iterator_init_ctx(&ncIter, nullptr, TEST_ARRAY_SIZE, sizeof(u32));
@@ -106,11 +106,11 @@ TEST(Ut_ArrayIterator, array_iterator_const_begin__IdxEqualsToZero)
 TEST(Ut_ArrayIterator, array_iterator_init_ctx__ErorrOnWrongParams)
 {
     /* Pass const iterator rather than non-const one */
-    auto status = array_iterator_init_ctx(&cIter, &TEST_ARRAY[0], TEST_ARRAY_SIZE, sizeof(u32));
+    auto status = array_iterator_init_ctx(&cIter, &testArray[0], TEST_ARRAY_SIZE, sizeof(u32));
     ENUMS_EQUAL_INT(array_iterator_status_cerror, status);
 
     /* Element size must be positive */
-    status = array_iterator_init_ctx(&ncIter, &TEST_ARRAY[0], TEST_ARRAY_SIZE, 0);
+    status = array_iterator_init_ctx(&ncIter, &testArray[0], TEST_ARRAY_SIZE, 0);
     ENUMS_EQUAL_INT(array_iterator_status_cerror, status);
 }
 
@@ -132,7 +132,7 @@ TEST(Ut_ArrayIterator, ITERATOR_FOREACH__AllElementsShouldBeVisited)
     size i = 0;
     ITERATOR_FOREACH(element, ncIter) {
         auto actual = static_cast<u32*>(element);
-        UNSIGNED_LONGS_EQUAL(TEST_ARRAY[i], *actual);
+        UNSIGNED_LONGS_EQUAL(testArray[i], *actual);
         ++i;
     }
     UNSIGNED_LONGS_EQUAL(TEST_ARRAY_SIZE, i);
@@ -196,4 +196,38 @@ TEST(Ut_ArrayIterator, ITERATOR_FOREACH_CONST__TestWithConstCharPtr)
     POINTERS_EQUAL(text, begin);
     STRCMP_EQUAL(text, static_cast<const char*>(begin));
     POINTERS_EQUAL(text + sizeof(const char*), ITERATOR_CEND(cIter));
+}
+
+TEST(Ut_ArrayIterator, array_iterator_create_const__ReturnsFalseWhenWrongParametersArePassed)
+{
+    CHECK_FALSE(array_iterator_create_const(nullptr, TEST_ARRAY_CONST, TEST_ARRAY_CONST_SIZE, sizeof(u32)));
+
+    iterator_instance iter;
+    CHECK_FALSE(array_iterator_create_const(&iter, nullptr, TEST_ARRAY_CONST_SIZE, sizeof(u32)));
+}
+
+TEST(Ut_ArrayIterator, array_iterator_create_const__CreatesValidIterator)
+{
+    iterator_instance iter;
+    CHECK_TRUE(array_iterator_create_const(&iter, TEST_ARRAY_CONST, TEST_ARRAY_CONST_SIZE, sizeof(u32)));
+
+    /* The caller must free memory afterwards */
+    ENUMS_EQUAL_INT(iterator_status_ok, iterator_destruct(&iter));
+}
+
+TEST(Ut_ArrayIterator, array_iterator_create__ReturnsFalseWhenWrongParametersArePassed)
+{
+    CHECK_FALSE(array_iterator_create(nullptr, testArray, TEST_ARRAY_SIZE, sizeof(u32)));
+
+    iterator_instance iter;
+    CHECK_FALSE(array_iterator_create(&iter, nullptr, TEST_ARRAY_SIZE, sizeof(u32)));
+}
+
+TEST(Ut_ArrayIterator, array_iterator_create__CreatesValidIterator)
+{
+    iterator_instance iter;
+    CHECK_TRUE(array_iterator_create(&iter, testArray, TEST_ARRAY_SIZE, sizeof(u32)));
+
+    /* The caller must free memory afterwards */
+    ENUMS_EQUAL_INT(iterator_status_ok, iterator_destruct(&iter));
 }

@@ -137,6 +137,38 @@ void* array_iterator_next(void* context);
  */
 void* array_iterator_end(void* context);
 
+/**
+ *
+ * Create and initialize const array iterator.
+ *
+ * This function performs all stuff needed by const array iterator to be ready to work.
+ * Created iterator must be explicitly deleted by the caller afterwards.
+ *
+ * @param iter Pointer to an iterator instance (uninitialized).
+ * @param arr Address of the first element of the array.
+ * @param elements Number of elements in the array.
+ * @param element_size Size of element.
+ *
+ * @return True on success, false on failure.
+ */
+bool array_iterator_create_const(iterator_instance* iter, const void* arr, size elements, size element_size);
+
+/**
+ *
+ * Create and initialize non-const array iterator.
+ *
+ * This function performs all stuff needed by non-const array iterator to be ready to work.
+ * Created iterator must be explicitly deleted by the caller afterwards.
+ *
+ * @param iter Pointer to an iterator instance (uninitialized).
+ * @param arr Address of the first element of the array.
+ * @param elements Number of elements in the array.
+ * @param element_size Size of element.
+ *
+ * @return True on success, false on failure.
+ */
+bool array_iterator_create(iterator_instance* iter, void* arr, size elements, size element_size);
+
 #ifdef __cplusplus
 }
 #endif

@@ -20,18 +20,23 @@ TEST_GROUP(Ut_Iterator)
 TEST(Ut_Iterator, NullCases)
 {
     iterator_instance iter;
+
+    /* iterator_construct_ext NULL cases */
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_construct_ext(nullptr, 10, malloc));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_construct_ext(&iter, 10, nullptr));
 
+    /* iterator_destruct_ext NULL cases */
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_destruct_ext(&iter, nullptr));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_destruct_ext(nullptr, free));
 
+    /* iterator_init_as_const NULl cases */
     auto ci = [](void* ctx) -> const void* { static_cast<void>(ctx); return nullptr; };
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(nullptr, ci, ci, ci));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(&iter, nullptr, ci, ci));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(&iter, ci, nullptr, ci));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_const(&iter, ci, ci, nullptr));
 
+    /* iterator_init_as_non_const NULL cases */
     auto i = [](void* ctx) -> void* { static_cast<void>(ctx); return nullptr; };
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_non_const(nullptr, i, i, i));
     ENUMS_EQUAL_INT(iterator_status_iptr, iterator_init_as_non_const(&iter, nullptr, i, i));
@@ -104,7 +109,31 @@ TEST(Ut_Iterator, iterator_init_as_non_const__FieldsInitialized)
     FUNCTIONPOINTERS_EQUAL(endPtr, iter.end.end_non_const);
 }
 
-TEST(Ut_Iterator, Misc)
+TEST(Ut_Iterator, iterator_is_constructed__ExpectFalseWhenNullWasPassed)
+{
+    CHECK_FALSE(iterator_is_constructed(nullptr));
+}
+
+TEST(Ut_Iterator, iterator_is_constructed__ConstructIteratorMultipleTimes)
+{
+    iterator_instance iter;
+
+    /* Construct the iterator */
+    ENUMS_EQUAL_INT(iterator_status_ok, iterator_construct(&iter, 10));
+    CHECK_TRUE(iterator_is_constructed(&iter));
+
+    /* Destruct the iterator */
+    ENUMS_EQUAL_INT(iterator_status_ok, iterator_destruct(&iter));
+    CHECK_FALSE(iterator_is_constructed(&iter));
+
+    /* Construct once more */
+    ENUMS_EQUAL_INT(iterator_status_ok, iterator_construct(&iter, sizeof(u8)));
+    CHECK_TRUE(iterator_is_constructed(&iter));
+
+    ENUMS_EQUAL_INT(iterator_status_ok, iterator_destruct(&iter));
+}
+
+TEST(Ut_Iterator, CreateAndUseIterator)
 {
     iterator_instance iter;
     auto status = iterator_construct(&iter, 3 * sizeof(u32));
